@@ -1,2 +1,2 @@
 # chloe
-C.H.L.O.E. - Clustered High-throughput Discovery of Viral Motifs
+C.H.L.O.E. - Conserve High-throughput Localization Of genomic Elements
