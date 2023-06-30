@@ -14,6 +14,7 @@ comprimento, duplicatas, porcentagem de caracteres ambiguos"""
 import logging
 import re
 from Bio import SeqIO
+from Bio.Seq import Seq
 
 # -----------------------------SEQUENCE CLEANER-------------------------------
 
@@ -39,16 +40,10 @@ class Sequence_Cleaner:
     def get_return(self):
         return self.total_input_seqs, self.total_used_seqs
 
-    # TODO: Mudar a forma de tradução da sequencia
     def translate_seq(self, seq):
-        if float.is_integer(len(str(seq)) / 3):
-            return seq.translate()
-
-        elif float.is_integer((len(str(seq)) - 1) / 3):
-            return seq[:-1].translate()
-
-        else:
-            return seq[:-2].translate()
+        methionine = "ATG"
+        sequence = (methionine + seq.split(methionine, 1)[1]).translate(to_stop=True, table=11, cds=False)
+        return sequence
 
     def clean_sequence(self):
         try:
@@ -103,7 +98,8 @@ class Sequence_Cleaner:
                 if record.seq not in seen:
                     seen.add(record.seq)
                     records.append(record)
-
+                else:
+                    self.total_used_seqs = self.total_used_seqs - 1
             SeqIO.write(records, f"{self.output}/{self.basename_file}.rmdup.fa", "fasta")
             logging.getLogger("SEQ_CLEANER").info("Duplicates has been removed!")
 
@@ -116,8 +112,13 @@ class Sequence_Cleaner:
             records = []
 
             for record in SeqIO.parse(f"{self.output}/{self.basename_file}.fa", "fasta"):
-                record.seq = self.translate_seq(record.seq)
-                records.append(record)
+                sequence = self.translate_seq(record.seq)
+
+                if len(sequence) >= (0.3 * len(record.seq)):
+                    record.seq = sequence
+                    records.append(record)
+                else:
+                    self.total_used_seqs = self.total_used_seqs - 1
 
             SeqIO.write(records, f"{self.output}/{self.basename_file}.rmdup.fa", "fasta")
             logging.getLogger("TRANSLATE").info("Sequences has been translated!")

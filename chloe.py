@@ -17,6 +17,9 @@ import string
 import secrets
 import logging
 import concurrent.futures
+import stat
+from Bio import SeqIO
+
 
 # ---------------------------------------------------------------------------
 # Imports internal modules
@@ -45,6 +48,7 @@ parser.add_argument("--percent_n", required=False, type=float, default=100, help
 
 parser.add_argument("--n_motifs", required=False, type=int, default=10,
                     help="""Number of motifs able to be founded, DEFAULT = 10""")
+
 parser.add_argument("--size_motifs", required=False, type=int, default=20, help="""Size of the motifs, DEFAULT = 20""")
 
 parser.add_argument("--ncluster", required=False, type=int, default=2,
@@ -85,6 +89,7 @@ def create_tree():
         path = os.path.join(output_job)
         if not os.path.isdir(path):
             os.mkdir(path)
+            os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
         else:
             raise "Can't create output folder"
 
@@ -143,15 +148,15 @@ class Chloe:
     def aligner(self, func, name=float('Nan'), file=float("Nan"), output_path=output_job):
         try:
             # Inicializando a classe do alinhador
-            module = alignment.Alignment()
+            module = alignment
             if func == 'main':
-                file_input = os.path.join(output_path, f"{basename_file}.rmdup.fa")
+                file_input = f"{basename_file}.rmdup.fa"
                 # Chamando alinhador de sequencia
-                module.main(basename_file, file_input, output_path)
+                module.main_align(basename_file, f"{output_path}/{file_input}", output_path)
 
             elif func == 'cluster':
                 file_input = os.path.join(output_path, file)
-                module.main(name, file_input, output_path)
+                module.main_align(name, file_input, output_path)
 
             elif func == 'consensus':
                 return module.get_consensus(file)
@@ -163,7 +168,7 @@ class Chloe:
     def clustering(self):
         try:
             # Inicializando a classe do clusterizador
-            module = clustering.Clustering(f"{basename_file}.aligned.fa", output_job)
+            module = clustering.Clustering(f"{basename_file}.aligned.fa", output_job, args.ncluster)
 
             # Chamando a função clusterizadora
             module.main()
@@ -178,6 +183,12 @@ class Chloe:
         except Exception as erro:
             raise erro
 
+    def get_size_cluster(self,file_path):
+        count = 0
+        for record in SeqIO.parse(file_path, "fasta"):
+            count += 1
+        return count
+        
     def main(self):
         # Sequence cleaner
         try:
@@ -200,6 +211,7 @@ class Chloe:
         except Exception as erro:
             raise erro
 
+
         # realignment
         try:
             clusters = [dir for dir in os.listdir(output_job) if dir.startswith("cluster_")]
@@ -209,6 +221,7 @@ class Chloe:
                 name = cluster.split(".")[0]
                 logging.getLogger('CLUSTER_ALIGN').info('Align cluster:%s', cluster_num)
                 self.aligner('cluster', name, file, os.path.join(output_job, cluster))
+
         except Exception as erro:
             raise erro
 
@@ -232,10 +245,10 @@ class Chloe:
         try:
             module = motif
             for cluster in [folder for folder in os.listdir(output_job) if folder.startswith("cluster")]:
+                size = self.get_size_cluster(os.path.join(output_job,cluster,f"{cluster}.fa"))
                 module.parse_meme(os.path.join(output_job, cluster, 'motif_disc', 'meme.xml'),
                                   os.path.join(output_job, cluster),
-                                  self.len_dataset_after_filter,
-                                  output_job, cluster)
+                                  size,output_job, cluster)
         except Exception as erro:
             raise erro
 

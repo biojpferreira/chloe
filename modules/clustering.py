@@ -14,18 +14,22 @@ import logging
 from Bio import SeqIO
 import pandas as pd
 from Bio.Phylo.TreeConstruction import DistanceCalculator
+from Bio.Phylo.TreeConstruction import DistanceTreeConstructor
+from Bio.Phylo.TreeConstruction import Scorer
 from Bio.Cluster import kmedoids
 from Bio import AlignIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import os
+import stat
 
 
 # ------------------------------CLUSTERING-----------------------------------
 
 class Clustering:
 
-    def __init__(self, alignment, output):
+    def __init__(self, alignment, output, nclusters):
+        self.ncluster = nclusters
         self.output = output
         self.alignment = alignment  # arquivo de alinhamento
         self.samples = pd.DataFrame(columns=['ID', 'CLUSTER', 'SEQ'])  # dataframe que vai receber o ID do cluster
@@ -34,11 +38,9 @@ class Clustering:
     # Função responsável por receber uma lista das sequencias e realizar a clusterização
     def clustering(self):
         try:
-            # TODO: Verificar a melhor forma de criar a matrix de distancia
-            calculator = DistanceCalculator(model='identity')
+            calculator = DistanceCalculator(model='blosum62')
             distance_matrix = calculator.get_distance(AlignIO.read(os.path.join(self.output, self.alignment), 'fasta'))
-            # TODO: Adicionar parametro de numero de clusters
-            clusterid, error, nfound = kmedoids(distance_matrix, nclusters=4, npass=1000)
+            clusterid, error, nfound = kmedoids(distance_matrix, nclusters=self.ncluster, npass=100)
             return clusterid
         except Exception as erro:
             raise erro
@@ -57,6 +59,7 @@ class Clustering:
             path_dir = os.path.join(self.output, f"cluster_{cluster_id}")
             if not os.path.exists(path_dir):
                 os.makedirs(path_dir)
+                os.chmod(path_dir, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
                 return path_dir
         except Exception as erro:
             raise erro
@@ -88,11 +91,10 @@ class Clustering:
     def check_size_cluster(self):
         try:
             for cluster in self.samples['CLUSTER'].unique():
-                # TODO: atualizar valor minimo permitido por cluster
                 if len(self.samples.loc[self.samples['CLUSTER'] == cluster]) <= 10:
-                    logging.getLogger("CLUSTERING").error(f"Cluster {cluster} to small for analysis, please check "
-                                                          f"parameters or sequences from input.")
-                    exit()
+                    logging.getLogger("CLUSTERING").error(f"Cluster {cluster} to small for analysis.")
+                    self.samples = self.samples.drop(self.samples[self.samples['CLUSTER'] == cluster].index)
+
         except Exception as erro:
             raise erro
 
@@ -112,8 +114,6 @@ class Clustering:
                                          axis=0, ignore_index=True)
 
             self.update_df(self.clustering())
-
-            # TODO: Verificar o tamanho do cluster e fechar por tamanho
             self.check_size_cluster()
             self.create_fasta_cluster()
 

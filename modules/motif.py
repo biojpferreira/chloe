@@ -29,7 +29,7 @@ def detect_ambiguous(seq):
     count = 0
     size = len(seq)
     for i in seq:
-        if not i in ['A', 'C', 'T', 'G']:
+        if i in ['X', 'B', 'Z','J']:
             count = count + 1
     return f"{count}/{size}({round(((count * 100) / size), 2)}%)"
 
@@ -60,7 +60,7 @@ def parse_meme(file, output, len_dataset, base_path, id_cluster):
     try:
         logging.getLogger("PARSING_RESULTS").info("Parsing output of MEME")
         result = pd.DataFrame(columns=['MOTIF', 'STRAND', 'SITES',
-                                       'PVALUE', 'GC', 'AMBIGUOUS_BASES', 'CLUSTER'])
+                                       'PVALUE','AMBIGUOUS_BASES', 'CLUSTER'])
         with open(file) as f:
             record = meme.read(f)
 
@@ -74,7 +74,6 @@ def parse_meme(file, output, len_dataset, base_path, id_cluster):
                                 'STRAND': [instance.strand],
                                 'SITES': [1],
                                 'PVALUE': [instance.pvalue],
-                                'GC': [f"{round((GC(instance.motif_name)), 2)}%"],
                                 'AMBIGUOUS_BASES': [detect_ambiguous(instance.motif_name)]
                             })]
                     result = pd.concat(data, axis=0, ignore_index=True)
@@ -112,13 +111,15 @@ class Motifs_discovery:
     def caller(self, file_input, output_path):
         try:
             logging.getLogger("MEME").info('Starting meme...')
-            sintax = f"meme /home/meme/{file_input}  -p 8 -oc motif_disc -protein -nmotifs {self.n_motifs} -objfun " \
+            sintax = f"meme /home/meme/{file_input} -oc /home/meme/motif_disc" \
+                     f" -protein -nmotifs {self.n_motifs} -objfun " \
                      f"classic -w {self.size_motif} "
+
             volume = f"{str(output_path)}:/home/meme"
             logging.getLogger("MEME").info(f"Meme sintax: {sintax}")
             logging.getLogger('MEME').info(f"Conteiner volume: {volume}")
             client = docker.from_env()
-            client.containers.run('memesuite/memesuite:5.5.0', sintax, volumes=[volume], cpu_count=8)
+            client.containers.run('memesuite/memesuite:5.5.0', sintax, volumes=[volume])
             logging.getLogger("MEME").info('Ending meme...')
         except Exception as erro:
             raise erro
