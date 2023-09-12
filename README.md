@@ -1,4 +1,4 @@
-# chloe
+# CHLOE
 C.H.L.O.E. - Conserve High-throughput Localization Of genomic Elements
 ---
 CHLOE is a tool for clustering and searching conserved regions in viral genomes. Its purpose is to perform a cross-search of conserved regions among the formed clusters to reduce errors caused by low sequence representativeness in the dataset.
