@@ -1,57 +1,73 @@
 # chloe
 C.H.L.O.E. - Conserve High-throughput Localization Of genomic Elements
 ---
-CHLOE é uma ferramenta de custerização e busca de regiões conservadas em genomas virais. Seu propósito é fazer uma busca cruzada de regiões conservadas entre os clusteres formados para diminuir os erros de baixa representatividade de sequencias no dataset.
-Uma breve descrição do seu projeto. Inclua o propósito, a funcionalidade e talvez até mesmo uma captura de tela ou um logotipo.
+CHLOE is a tool for clustering and searching conserved regions in viral genomes. Its purpose is to perform a cross-search of conserved regions among the formed clusters to reduce errors caused by low sequence representativeness in the dataset.
 
-## Principais Recursos
+## Key Features
 
-- **Clusterização Avançada**: O CHLOE emprega algoritmos de clusterização kmedoids para agrupar sequências virais relacionadas, tornando mais fácil identificar padrões e variações genéticas.
+- **Advanced Clustering**: CHLOE employs k-medoids clustering algorithms to group related viral sequences, making it easier to identify genetic patterns and variations.
 
-- **Busca de Regiões Conservadas**: A ferramenta realiza uma busca minuciosa em cada cluster para identificar regiões altamente conservadas, que podem desempenhar um papel crítico em estudos de evolução viral e desenvolvimento de vacinas para isso é utilizado a ferramenta MEME.
+- **Conserved Region Search**: The tool conducts a thorough search within each cluster to identify highly conserved regions, which can play a critical role in viral evolution studies and vaccine development. For this, the MEME tool is used.
 
-## Por que CHLOE?
+## Why CHLOE?
 
-- **Acelere Suas Pesquisas**: Com a capacidade de agrupar sequências e identificar regiões conservadas de maneira eficiente, o CHLOE economiza tempo e recursos, acelerando o progresso em pesquisas virais.
+- **Accelerate Your Research**: With the ability to efficiently group sequences and identify conserved regions, CHLOE saves time and resources, speeding up progress in viral research.
 
-- **Aumente a Precisão**: Elimine a incerteza causada por sequências de baixa representatividade, obtendo resultados mais precisos e confiáveis em suas análises genômicas.
+- **Enhance Accuracy**: Eliminate the uncertainty caused by low-representative sequences, obtaining more accurate and reliable results in your genomic analyses.
 
-## Índice
+## Table of Contents
 
-- [Requisitos](#requisitos)
-- [Instalação](#instalação)
-- [Como Usar](#como-usar)
-- [Contribuição](#contribuição)
-- [Licença](#licença)
+- [Requirements](#requirements)
+- [Installation](#installation)
 
-## Requisitos
+## Requirements
 
-### Requisitos de hardware
+### Hardware Requirements
 - Threads = 8
-- RAM = 8Gb para datasets pequenos (Maximo 2000 sequências)
-- Armazenamento = 128Gb SSD
+- RAM = 8GB for small datasets (Maximum 2000 sequences)
+- Storage = 128GB SSD
 
-### Requisitos de software
+### Software Requirements
+- Python v3.10.12
 - Docker v23.0.1
-- mafft v7.490
+- MAFFT v7.490
 
 ### Docker images
 - memesuite/memesuite v5.5.0
 - ncbi/blast v2.13.0
 
-## Instalação
+## Installation
 
+```bash
 - apt-get update
 - apt-get upgrade
 - git clone https://github.com/biojpferreira/chloe
 - docker pull memesuite/memesuite:5.5.0
 - docker pull ncbi/blast:2.13.0
 - pip install -r requirements.txt
+```
 
 ---
-## Primeiros passos
 
-- Para usar o ambiente virtual chloe
-- bash```
-  source enviroment/bin/activate
+## Getting Started
 
+- **To use the CHLOE virtual environment**: source environment/bin/activate
+- **To view all possible configurations**: python chloe.py -h
+
+## Options
+  -h, --help            show this help message and exit
+  --input INPUT, -i INPUT
+                        Path for fasta file.
+  --output OUTPUT, -o OUTPUT
+                        Path job output.
+  --min_lenght MIN_LENGHT
+                        the user defines the minimum length. DEFAULT = 0, it means you don’t have to care about the minimum length
+  --max_lenght MAX_LENGHT
+                        the user defines the maximum length. DEFAULT = 0, it means you don’t have to care about the maximum length
+  --percent_n PERCENT_N
+                        The user defines the percent of N is allowed. DEFAULT = 100, all sequences with ’N’ will be in your ouput, set value
+                        to 0 if you want no sequences with ”N” in your output
+  --n_motifs N_MOTIFS   Number of motifs able to be founded, DEFAULT = 10
+  --size_motifs SIZE_MOTIFS
+                        Size of the motifs, DEFAULT = 20
+  --ncluster NCLUSTER   Number of clusters able to be calculated, DEFAULT = 2
