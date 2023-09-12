@@ -50,3 +50,8 @@ Uma breve descrição do seu projeto. Inclua o propósito, a funcionalidade e ta
 
 ---
 ## Primeiros passos
+
+- Para usar o ambiente virtual chloe
+- bash```
+  source enviroment/bin/activate
+
