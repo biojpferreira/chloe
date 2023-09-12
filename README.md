@@ -55,7 +55,10 @@ CHLOE is a tool for clustering and searching conserved regions in viral genomes.
 - **To view all possible configurations**: python chloe.py -h
 
 ## Options
-  -h, --help            show this help message and exit
+| Argument | full_name | Description |
+|---------|---------|----------|
+|-h|--help|show this help message and exit|
+
   --input INPUT, -i INPUT
                         Path for fasta file.
   --output OUTPUT, -o OUTPUT
