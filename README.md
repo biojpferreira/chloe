@@ -19,6 +19,7 @@ CHLOE is a tool for clustering and searching conserved regions in viral genomes.
 
 - [Requirements](#requirements)
 - [Installation](#installation)
+- [Getting Started](Getting_Started)
 
 ## Requirements
 
