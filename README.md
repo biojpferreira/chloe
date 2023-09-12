@@ -41,13 +41,13 @@ Uma breve descrição do seu projeto. Inclua o propósito, a funcionalidade e ta
 
 ## Instalação
 
-```bash
-apt-get update
+bash``` apt-get update
 apt-get upgrade
 
 git clone https://github.com/biojpferreira/chloe
 docker pull memesuite/memesuite:5.5.0
 docker pull ncbi/blast:2.13.0
 pip install -r requirements.txt
+
 ---
 ## Primeiros passos
