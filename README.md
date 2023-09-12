@@ -60,9 +60,9 @@ CHLOE is a tool for clustering and searching conserved regions in viral genomes.
 | -h | --help | show this help message and exit. |
 |-i | --input | Path for fasta file. |
 | -o | --output | Path job output. |
-| --min_lenght| - | Minimum length. DEFAULT = 0, it means you don’t have to care about the minimum length |
-| --max_lenght | - | Maximum length. DEFAULT = 0, it means you don’t have to care about the maximum length |
-| --percent_n | - | The user defines the percent of N is allowed. DEFAULT = 100, all sequences with ’N’ will be in your ouput, set value to 0 if you want no sequences with ”N” in your output |
+| --min_lenght| MINIMUM_LENGTH | Minimum length. DEFAULT = 0, it means you don’t have to care about the minimum length |
+| --max_lenght | MAXIMUM_LENGHT | Maximum length. DEFAULT = 0, it means you don’t have to care about the maximum length |
+| --percent_n | PERCENT_NBASES | The user defines the percent of N is allowed. DEFAULT = 100, all sequences with ’N’ will be in your ouput, set value to 0 if you want no sequences with ”N” in your output |
 | --n_motifs | N_MOTIFS | Number of motifs able to be founded, DEFAULT = 10 |
 | --size_motifs | SIZE_MOTIFS | Size of the motifs, DEFAULT = 20 |
 | --ncluster | NCLUSTER | Number of clusters able to be calculated, DEFAULT = 2 |
