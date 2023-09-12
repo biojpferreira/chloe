@@ -27,13 +27,13 @@ Uma breve descrição do seu projeto. Inclua o propósito, a funcionalidade e ta
 ## Requisitos
 
 ### Requisitos de hardware
-Threads = 8
-RAM = 8Gb para datasets pequenos (Maximo 2000 sequências)
-Armazenamento = 128Gb SSD
+- Threads = 8
+- RAM = 8Gb para datasets pequenos (Maximo 2000 sequências)
+- Armazenamento = 128Gb SSD
 
 ### Requisitos de software
-Docker v23.0.1
-mafft v7.490
+- Docker v23.0.1
+- mafft v7.490
 
 ### Docker images
 - memesuite/memesuite v5.5.0
@@ -41,14 +41,13 @@ mafft v7.490
 
 ## Instalação
 
-Forneça instruções passo a passo sobre como instalar seu projeto. Inclua comandos de terminal, configurações de ambiente, ou qualquer outra coisa necessária para configurar o ambiente de desenvolvimento.
-
-Exemplo:
-
 ```bash
+apt-get update
+apt-get upgrade
+
 git clone https://github.com/biojpferreira/chloe
 docker pull memesuite/memesuite:5.5.0
 docker pull ncbi/blast:2.13.0
 pip install -r requirements.txt
-
+---
 ## Primeiros passos
