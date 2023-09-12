@@ -36,8 +36,8 @@ Docker v23.0.1
 mafft v7.490
 
 ### Docker images
-memesuite/memesuite v5.5.0
-ncbi/blast v2.13.0
+- memesuite/memesuite v5.5.0
+- ncbi/blast v2.13.0
 
 ## Instalação
 
@@ -46,8 +46,7 @@ Forneça instruções passo a passo sobre como instalar seu projeto. Inclua coma
 Exemplo:
 
 ```bash
-
-git clone 
+git clone https://github.com/biojpferreira/chloe
 docker pull memesuite/memesuite:5.5.0
 docker pull ncbi/blast:2.13.0
 pip install -r requirements.txt
